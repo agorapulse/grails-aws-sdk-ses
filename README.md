@@ -1,4 +1,4 @@
-AWS SDK SES Grails Plugin
+Grails AWS SDK SES Plugin
 =========================
 
 [![Build Status](https://travis-ci.org/agorapulse/grails-aws-sdk-ses.svg?token=BpxbA1UyYnNoUwrDNXtN&branch=master)](https://travis-ci.org/agorapulse/grails-aws-sdk-ses)
