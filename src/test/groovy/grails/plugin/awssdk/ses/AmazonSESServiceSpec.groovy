@@ -9,6 +9,10 @@ import spock.lang.Specification
 @TestFor(AmazonSESService)
 class AmazonSESServiceSpec extends Specification {
 
+    static doWithConfig(conf) {
+        conf.grails.plugin.awssdk.ses.sourceEmail = 'foo@domain.com'
+    }
+
     void setup() {
         // Mock collaborator
         service.client = Mock(AmazonSimpleEmailServiceClient)
