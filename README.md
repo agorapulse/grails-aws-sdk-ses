@@ -100,12 +100,12 @@ grails:
                 accessKey: {ACCESS_KEY} # Service setting (optional)
                 secretKey: {SECRET_KEY} # Service setting (optional)
                 region: eu-west-1       # Service setting (optional)
-                notificationEmail: notification@foo.com
-                subjectPrefix: [BETA]
+                sourceEmail: notification@foo.com # Service setting (optional)
+                subjectPrefix: [BETA]   # Service setting (optional)
             
 ```
 
-**notificationEmail** allows you define global from/source email.
+**sourceEmail** allows you define global from/source email.
 **subjectPrefix** allows you to automatically prefix all your email subjects (for example, to get a specific env).
 
 By default, in environments other than PROD, subject are prefixed by "[ENV_NAME] ..." (ex: "[DEVELOPMENT] Some test subject")
@@ -141,7 +141,7 @@ int statusId = amazonSESService.send(
     'ben@foo.com',
     'Some subject',
     htmlBody,
-    'notification@foo.com',  	// Optional, default to notificationEmail from config
+    'notification@foo.com',  	// Optional, default to sourceEmail from config
     'reply@foo.com'             // Optional, reply to email
 )
 ```

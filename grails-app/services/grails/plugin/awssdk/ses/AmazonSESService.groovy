@@ -50,8 +50,8 @@ class AmazonSESService implements InitializingBean {
             return statusId
         }
         if (!sourceEmail) {
-            assert serviceConfig.notificationEmail, "Default notificationEmail must be set in config"
-            sourceEmail = serviceConfig.notificationEmail
+            assert serviceConfig.sourceEmail, "Default sourceEmail must be set in config"
+            sourceEmail = serviceConfig.sourceEmail
         }
         // Prefix email subject for DEV and BETA environment
         if (Environment.current != Environment.PRODUCTION) {
