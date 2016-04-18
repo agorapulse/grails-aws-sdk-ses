@@ -1,5 +1,6 @@
 package grails.plugin.awssdk.ses
 import javax.mail.*
+import javax.mail.internet.MimeBodyPart
 
 class ReadMail {
 
@@ -72,4 +73,59 @@ class ReadMail {
 
         numberOfDeletedMessages
     }
+
+    String getMessageBodyAsAsAString(Message message) {
+        try {
+            Object content = message.getContent()
+            if ( content instanceof String ) {
+                return (String) content
+            } else if ( content instanceof Multipart ) {
+                return parseMultipart((Multipart) content)
+            }
+        }catch ( MessagingException e ) {
+            e.printStackTrace();
+        } catch ( IOException e ) {
+            e.printStackTrace();
+        }
+    }
+
+    List<Map> messagesWithSubjectAtInbox(String subject) {
+        def result = []
+        def store = connectToStore()
+        def inbox = openInbox(store)
+
+        inbox.open(Folder.READ_WRITE)
+
+        Message[] messages = inbox.getMessages()
+        int numberOfDeletedMessages = 0
+        for(int i = 0; i < messages.size();i++) {
+            def message = messages[i]
+            if(message.subject == subject) {
+                result << [subject: message.subject, body: getMessageBodyAsAsAString(message)]
+            }
+        }
+        inbox.close true
+        store.close()
+
+        result
+    }
+
+    String parseMultipart( Multipart mPart ) {
+        for ( int i = 0; i < mPart.getCount(); i++ ) {
+            BodyPart bp = mPart.getBodyPart( i );
+            String disposition = bp.getDisposition()
+            if ( disposition == null && bp instanceof MimeBodyPart ){
+                MimeBodyPart mbp = (MimeBodyPart) bp
+
+                if ( mbp.isMimeType( "text/plain" ) ) {
+                    return  mbp.getContent();
+
+                } else if ( mbp.isMimeType( "text/html" ) ) {
+                    return  (String) mbp.getContent();
+                }
+            }
+        }
+        null
+    }
+
 }

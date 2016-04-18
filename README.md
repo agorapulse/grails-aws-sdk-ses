@@ -186,6 +186,18 @@ Sent date: ${sentDate}
 </html>
 ```
 
+You can send a template using a method which takes a closure as illustrated here:
+
+```groovy
+def m = [foo: 'Some value to use in the template',bar: 'Another value']
+def statusId = amazonSESTemplateService.mailTemplate {
+    to 'ben@foo.com',
+    subjectCode 'email.test.subject' // defined in mail.properties
+    model m
+    templateName 'test' // GSP located in '/views/template/emails/_test.gsp'
+}
+```
+
 To send an email to a recipient (with a class that implements [MailRecipient](/src/main/groovy/grails/plugins/awssdk/ses/MailRecipient.groovy) interface).
 
 ```groovy
