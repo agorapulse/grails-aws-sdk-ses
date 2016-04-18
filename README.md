@@ -208,6 +208,34 @@ For more info, AWS SDK for Java documentation is located here:
 * [AWS SDK for Java](http://docs.amazonwebservices.com/AWSJavaSDK/latest/javadoc/index.html)
 
 
+# Download and Run Tests
+
+Download the repository and create a file named _grails-app/conf/application-TEST.yml_ It will be merged with the application.yml when you execute your tests. Note: this file is included in .gitignore
+
+```groovy
+grails:
+    plugin:
+        awssdk:
+            ses:
+                accessKey: {ACCESS_KEY}
+                secretKey: {SECRET_KEY}
+                region: eu-west-1 // change this to your region
+                notificationEmail: notification@foo.com
+```
+
+The integration tests connect to a real email server, fetches the emails of the inbox and asserts the email was actually delivered. You will need to setup the next environment variables (values will depend on your email account): 
+
+```groovy
+TEST_INBOX_EMAIL={your_verified_email_address@gmx.es}
+TEST_INBOX_HOST=pop.gmx.com
+TEST_INBOX_PASSWORD={youpass}
+TEST_INBOX_FOLDER=INBOX
+TEST_INBOX_PROVIDER=pop3
+```
+
+Note: **If you SES account is still sandboxed. You can only send emails to verified email accounts.**
+
+
 # Bugs
 
 To report any bug, please use the project [Issues](http://github.com/agorapulse/grails-aws-sdk-ses/issues) section on GitHub.
