@@ -33,6 +33,23 @@ class AmazonSESService implements InitializingBean {
         client = new AmazonSimpleEmailServiceClient(credentials, configuration)
                 .withRegion(region)
     }
+    /**
+     * @return 1 if successful, 0 if not sent, -1 if blacklisted
+     */
+    int mail(@DelegatesTo(TransactionalEmail) Closure composer) throws Exception {
+
+        Closure cl = composer.clone()
+        TransactionalEmail transactionalEmail = new TransactionalEmail()
+        cl.delegate = transactionalEmail
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        send(transactionalEmail.destinationEmail,
+                transactionalEmail.subject,
+                transactionalEmail.htmlBody,
+                transactionalEmail.sourceEmail,
+                transactionalEmail.replyToEmail)
+    }
 
     /**
      *
