@@ -38,7 +38,7 @@ class AmazonSESServiceSpec extends Specification {
         setUpSesInteractions()
 
         when:
-        int statusId = service.send('destination@email.com', 'Some subject', 'Some html body')
+        int statusId = service.send('destination@email.com', 'Some subject', 'Some html body', 'source@email.com')
 
         then:
         statusId == STATUS_DELIVERED
@@ -71,7 +71,7 @@ class AmazonSESServiceSpec extends Specification {
         setUpSesInteractions(serviceException: "Address blacklisted")
 
         when:
-        int statusId = service.send('destination@email.com', 'Some subject', 'Some html body')
+        int statusId = service.send('destination@email.com', 'Some subject', 'Some html body', 'source@email.com')
 
         then:
         statusId == STATUS_BLACKLISTED
@@ -82,7 +82,7 @@ class AmazonSESServiceSpec extends Specification {
         setUpSesInteractions(serviceException: "Email address is not verified")
 
         when:
-        int statusId = service.send('destination@email.com', 'Some subject', 'Some html body')
+        int statusId = service.send('destination@email.com', 'Some subject', 'Some html body', 'source@email.com')
 
         then:
         statusId == STATUS_NOT_DELIVERED
@@ -93,7 +93,7 @@ class AmazonSESServiceSpec extends Specification {
         setUpSesInteractions(serviceException: "Unknown")
 
         when:
-        int statusId = service.send('destination@email.com', 'Some subject', 'Some html body')
+        int statusId = service.send('destination@email.com', 'Some subject', 'Some html body', 'source@email.com')
 
         then:
         statusId == STATUS_NOT_DELIVERED
@@ -104,7 +104,7 @@ class AmazonSESServiceSpec extends Specification {
         setUpSesInteractions(clientException: "Unknown")
 
         when:
-        int statusId = service.send('destination@email.com', 'Some subject', 'Some html body')
+        int statusId = service.send('destination@email.com', 'Some subject', 'Some html body', 'source@email.com')
 
         then:
         statusId == STATUS_NOT_DELIVERED
