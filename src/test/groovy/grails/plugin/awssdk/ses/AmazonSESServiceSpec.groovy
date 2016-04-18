@@ -5,6 +5,8 @@ import com.amazonaws.AmazonServiceException
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import static grails.plugin.awssdk.ses.AwsSdkSesEmailDeliveryStatus.*
+
 
 @TestFor(AmazonSESService)
 class AmazonSESServiceSpec extends Specification {
@@ -39,7 +41,7 @@ class AmazonSESServiceSpec extends Specification {
         int statusId = service.send('destination@email.com', 'Some subject', 'Some html body')
 
         then:
-        statusId == AmazonSESService.STATUS_DELIVERED
+        statusId == STATUS_DELIVERED
     }
 
     void "Send email with source email"() {
@@ -50,7 +52,7 @@ class AmazonSESServiceSpec extends Specification {
         int statusId = service.send('destination@email.com', 'Some subject', 'Some html body', 'source@email.com')
 
         then:
-        statusId == AmazonSESService.STATUS_DELIVERED
+        statusId == STATUS_DELIVERED
     }
 
     void "Send email with reply email"() {
@@ -61,7 +63,7 @@ class AmazonSESServiceSpec extends Specification {
         int statusId = service.send('destination@email.com', 'Some subject', 'Some html body', 'source@email.com', 'reply@email.com')
 
         then:
-        statusId == AmazonSESService.STATUS_DELIVERED
+        statusId == STATUS_DELIVERED
     }
 
     void "Send email with blacklisted service exception"() {
@@ -72,7 +74,7 @@ class AmazonSESServiceSpec extends Specification {
         int statusId = service.send('destination@email.com', 'Some subject', 'Some html body')
 
         then:
-        statusId == AmazonSESService.STATUS_BLACKLISTED
+        statusId == STATUS_BLACKLISTED
     }
 
     void "Send email with unverified email service exception"() {
@@ -83,7 +85,7 @@ class AmazonSESServiceSpec extends Specification {
         int statusId = service.send('destination@email.com', 'Some subject', 'Some html body')
 
         then:
-        statusId == AmazonSESService.STATUS_NOT_DELIVERED
+        statusId == STATUS_NOT_DELIVERED
     }
 
     void "Send email with unknown service exception"() {
@@ -94,7 +96,7 @@ class AmazonSESServiceSpec extends Specification {
         int statusId = service.send('destination@email.com', 'Some subject', 'Some html body')
 
         then:
-        statusId == AmazonSESService.STATUS_NOT_DELIVERED
+        statusId == STATUS_NOT_DELIVERED
     }
 
     void "Send email with unknown client exception"() {
@@ -105,7 +107,7 @@ class AmazonSESServiceSpec extends Specification {
         int statusId = service.send('destination@email.com', 'Some subject', 'Some html body')
 
         then:
-        statusId == AmazonSESService.STATUS_NOT_DELIVERED
+        statusId == STATUS_NOT_DELIVERED
     }
 
 }

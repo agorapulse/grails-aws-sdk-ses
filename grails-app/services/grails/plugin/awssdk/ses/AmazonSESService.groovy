@@ -11,11 +11,10 @@ import grails.core.GrailsApplication
 import grails.plugin.awssdk.AwsClientUtil
 import grails.util.Environment
 import org.springframework.beans.factory.InitializingBean
+import static grails.plugin.awssdk.ses.AwsSdkSesEmailDeliveryStatus.*
 
 class AmazonSESService implements InitializingBean {
-    public static final int STATUS_DELIVERED = 1
-    public static final int STATUS_BLACKLISTED = -1
-    public static final int STATUS_NOT_DELIVERED = 0
+
 
     static SERVICE_NAME = ServiceAbbreviations.Email
 
