@@ -55,6 +55,7 @@ dependencies {
     testCompile "org.grails.plugins:geb"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+    testCompile 'javax.mail:mail:1.4.4'
 
     // Latest AWS SDK for SES
     compile "com.amazonaws:aws-java-sdk-ses:$awsJavaSdkVersion"

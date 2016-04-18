@@ -1,6 +1,7 @@
 # Grails
 
 application-DEVELOPMENT.yml
+application-TEST.yml
 
 # Gradle
 

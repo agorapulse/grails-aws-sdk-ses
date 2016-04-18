@@ -150,6 +150,16 @@ int statusId = amazonSESService.send(
 )
 ```
 
+You can use a method which takes a closure as an argument
+
+```groovy
+int statusId = amazonSESService.mail {
+    to 'recipient@foo.com',
+    subject 'Some subject'
+    from 'sender@foo.com'
+}
+```
+
 To send an email from an GSP template with i18n support.
 
 ```groovy
