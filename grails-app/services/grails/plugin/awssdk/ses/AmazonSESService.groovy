@@ -13,6 +13,9 @@ import grails.util.Environment
 import org.springframework.beans.factory.InitializingBean
 
 class AmazonSESService implements InitializingBean {
+    public static final int STATUS_DELIVERED = 1
+    public static final int STATUS_BLACKLISTED = -1
+    public static final int STATUS_NOT_DELIVERED = 0
 
     static SERVICE_NAME = ServiceAbbreviations.Email
 
@@ -45,7 +48,7 @@ class AmazonSESService implements InitializingBean {
              String htmlBody,
              String sourceEmail = '',
              String replyToEmail = '') {
-        int statusId = 0
+        int statusId = STATUS_NOT_DELIVERED
         if (!destinationEmail) {
             return statusId
         }
@@ -69,11 +72,11 @@ class AmazonSESService implements InitializingBean {
                 sendEmailRequest.replyToAddresses = [replyToEmail]
             }
             client.sendEmail(sendEmailRequest)
-            statusId = 1
+            statusId = STATUS_DELIVERED
         } catch (AmazonServiceException exception) {
             if (exception.message.find("Address blacklisted")) {
                 log.debug "Address blacklisted destinationEmail=$destinationEmail"
-                statusId = -1
+                statusId = STATUS_BLACKLISTED
             } else if (exception.message.find("Missing final")) {
                 log.warn "Invalid parameter value: destinationEmail=$destinationEmail, sourceEmail=$sourceEmail, replyToEmail=$replyToEmail, subject=$subject"
             } else {
