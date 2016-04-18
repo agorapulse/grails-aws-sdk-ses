@@ -9,6 +9,29 @@ class AmazonSESTemplateService extends AmazonSESService {
     MessageSource messageSource
     PageRenderer groovyPageRenderer
 
+
+    /**
+     * @return 1 if successful, 0 if not sent, -1 if blacklisted
+     */
+    int mailTemplate(@DelegatesTo(TransactionalEmailTemplate) Closure composer) throws Exception {
+
+        Closure cl = composer.clone()
+        TransactionalEmailTemplate transactionalEmailTemplate = new TransactionalEmailTemplate()
+        cl.delegate = transactionalEmailTemplate
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        sendTemplate(
+                transactionalEmailTemplate.destinationEmail,
+                transactionalEmailTemplate.subjectCode,
+                transactionalEmailTemplate.subjectVariables,
+                transactionalEmailTemplate.model,
+                transactionalEmailTemplate.templateName,
+                transactionalEmailTemplate.locale,
+                transactionalEmailTemplate.timeZoneGmt,
+                transactionalEmailTemplate.replyToEmail)
+    }
+
     /**
      * Global method to send email to anybody
      *
