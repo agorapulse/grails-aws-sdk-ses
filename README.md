@@ -25,10 +25,17 @@ This plugin encapsulates **Amazon SES** related logic.
 Add plugin dependency to your `build.gradle`:
 
 ```groovy
+repositories {
+    ...
+    maven { url "http://dl.bintray.com/agorapulse/plugins" } // TEMP, to remove once the plugin is officially released
+    ...
+}
+
 dependencies {
   ...
-  compile 'org.grails.plugins:aws-sdk-ses:2.0.0-beta1'
+  compile 'org.grails.plugins:aws-sdk-ses:2.0.0-beta2'
   ...
+}
 ```
 
 If not provided (for example with `rest-api` profile), you might have to had GSP plugin dependency.
@@ -213,6 +220,8 @@ int statusId = amazonSESTemplateService.sendTemplateToRecipient(
 )
 ```
 
+## Advanced usage
+
 If required, you can also directly use **AmazonSESClient** instance available at **amazonSESService.client**.
 
 For more info, AWS SDK for Java documentation is located here:
@@ -253,3 +262,8 @@ Note: **If you SES account is still sandboxed. You can only send emails to verif
 To report any bug, please use the project [Issues](http://github.com/agorapulse/grails-aws-sdk-ses/issues) section on GitHub.
 
 Feedback and pull requests are welcome!
+
+
+# Thanks
+
+Thanks to [Sergio del Amo](https://github.com/sdelamo) for the contributions!

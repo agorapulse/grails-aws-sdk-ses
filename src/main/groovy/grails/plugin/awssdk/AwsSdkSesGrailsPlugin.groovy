@@ -14,6 +14,7 @@ class AwsSdkSesGrailsPlugin extends Plugin {
     def author = "Benoit Hediard"
     def authorEmail = "ben@agorapulse.com"
     def description = "AWS SES related dependencies and artefacts"
+    def developers = [ [ name: "Sergio del Amo", email: "me@sergiodelamo.com" ]]
 
     def documentation = "https://github.com/agorapulse/grails-aws-sdk-ses"
     def license = "APACHE"
