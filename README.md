@@ -1,7 +1,7 @@
 Grails AWS SDK SES Plugin
 =========================
 
-[![Build Status](https://travis-ci.org/agorapulse/grails-aws-sdk-ses.svg?token=BpxbA1UyYnNoUwrDNXtN&branch=master)](https://travis-ci.org/agorapulse/grails-aws-sdk-ses)
+[![Build Status](https://travis-ci.org/agorapulse/grails-aws-sdk-ses.svg?branch=master)](https://travis-ci.org/agorapulse/grails-aws-sdk-ses)
 
 # Introduction
 
@@ -104,12 +104,12 @@ grails:
             secretKey: {SECRET_KEY} # Global default setting
             region: us-east-1       # Global default setting
             ses:
-                accessKey: {ACCESS_KEY} # Service setting (optional)
-                secretKey: {SECRET_KEY} # Service setting (optional)
-                region: eu-west-1       # Service setting (optional)
-                sourceEmail: notification@foo.com # Service setting (optional)
-                subjectPrefix: [BETA]   # Service setting (optional)
-                templatePath: /templates/email # Service setting (optional), default to /templates/email)
+                accessKey: {ACCESS_KEY} # (optional)
+                secretKey: {SECRET_KEY} # (optional)
+                region: eu-west-1       # (optional)
+                sourceEmail: notification@foo.com # (optional)
+                subjectPrefix: [BETA]   # (optional)
+                templatePath: /templates/email # (optional), default to /templates/email
             
 ```
 
@@ -131,6 +131,8 @@ The plugin provides the following Grails artefacts:
 And the following interface:
 
 * **MailRecipient**
+
+## Sending a raw HTML email
 
 To send a custom HTML email.
 The send method returns:
@@ -166,6 +168,7 @@ int statusId = amazonSESService.mail {
     from 'sender@foo.com'
 }
 ```
+## Sending an email based on a GSP template
 
 To send an email from an GSP template with i18n support.
 
@@ -241,7 +244,7 @@ grails:
                 accessKey: {ACCESS_KEY}
                 secretKey: {SECRET_KEY}
                 region: eu-west-1 // change this to your region
-                notificationEmail: notification@foo.com
+                sourceEmail: notification@foo.com
 ```
 
 The integration tests connect to a real email server, fetches the emails of the inbox and asserts the email was actually delivered. You will need to setup the next environment variables (values will depend on your email account): 
