@@ -40,7 +40,7 @@ class AmazonSESTemplateService extends AmazonSESService {
                             notificationEmail: destinationEmail,
                             sentDate: new LocalDateTime().plusMinutes((timeZoneGmt * 60).toInteger()).toDate()
                     ],
-                    template: "/templates/email/${templateName}"
+                    template: "${serviceConfig['templatePath'] ?: '/templates/email'}/${templateName}"
             )
             // Send email
             statusId = send(destinationEmail, subject, htmlBody, '', replyToEmail)

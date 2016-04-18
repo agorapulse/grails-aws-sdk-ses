@@ -102,13 +102,17 @@ grails:
                 region: eu-west-1       # Service setting (optional)
                 sourceEmail: notification@foo.com # Service setting (optional)
                 subjectPrefix: [BETA]   # Service setting (optional)
+                templatePath: /templates/email # Service setting (optional), default to /templates/email)
             
 ```
 
 **sourceEmail** allows you define global from/source email.
-**subjectPrefix** allows you to automatically prefix all your email subjects (for example, to get a specific env).
 
+**subjectPrefix** allows you to automatically prefix all your email subjects (for example, to get a specific env).
 By default, in environments other than PROD, subject are prefixed by "[ENV_NAME] ..." (ex: "[DEVELOPMENT] Some test subject")
+
+**templatePath** allows to specify the location of your email templates, relative to the `/views` folder.
+
 
 # Usage
 
