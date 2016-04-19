@@ -6,13 +6,7 @@ import com.amazonaws.ClientConfiguration
 import com.amazonaws.regions.Region
 import com.amazonaws.regions.ServiceAbbreviations
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient
-import com.amazonaws.services.simpleemail.model.Message
-import com.amazonaws.services.simpleemail.model.Destination
-import com.amazonaws.services.simpleemail.model.Body
-import com.amazonaws.services.simpleemail.model.Content
-import com.amazonaws.services.simpleemail.model.RawMessage
-import com.amazonaws.services.simpleemail.model.SendEmailRequest
-import com.amazonaws.services.simpleemail.model.SendRawEmailRequest
+import com.amazonaws.services.simpleemail.model.*
 import grails.core.GrailsApplication
 import grails.plugin.awssdk.AwsClientUtil
 import grails.util.Environment
@@ -20,9 +14,7 @@ import org.springframework.beans.factory.InitializingBean
 
 import javax.activation.DataHandler
 import javax.activation.DataSource
-import javax.activation.FileDataSource
 import javax.mail.BodyPart
-import javax.mail.MessagingException
 import javax.mail.Session
 import javax.mail.internet.MimeBodyPart
 import javax.mail.internet.MimeMessage
