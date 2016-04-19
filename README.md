@@ -170,6 +170,44 @@ int statusId = amazonSESService.mail {
 ```
 ## Sending an email based on a GSP template
 
+## Send Emails with Attachments
+
+You can send an email with an attachment as illustrated below:
+
+```groovy
+int statusId = amazonSESService.mailWithAttachment {
+    to 'recipient@foo.com',
+    subject 'Some subject'
+    from 'sender@foo.com'
+    htmlBody '<p>Find your ticket attached</p>'
+    attachment {
+        filepath '/tmp/ticket.pdf'
+    }
+}
+```
+
+If you want to have more control about the attachment filename, mime type .. you can use:
+
+```groovy
+int statusId = amazonSESService.mailWithAttachment {
+    to 'recipient@foo.com',
+    subject 'Some subject'
+    from 'sender@foo.com'
+    htmlBody '<p>Find your ticket attached</p>'
+    attachment {
+        filename 'ticket-2344.pdf'
+        filepath '/tmp/ticket.pdf'
+        mimeType 'application/pdf'
+        description 'Your concert ticket'
+    }
+}
+```
+
+
+**Note**. AWS SES has a list of [unsupported attachment types](http://docs.aws.amazon.com/ses/latest/DeveloperGuide/mime-types.html)
+
+## Send Emails with Templates
+
 To send an email from an GSP template with i18n support.
 
 ```groovy

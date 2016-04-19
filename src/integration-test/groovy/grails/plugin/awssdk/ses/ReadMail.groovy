@@ -32,6 +32,15 @@ class ReadMail {
         inbox
     }
 
+    boolean hasAttachments(Message msg) throws MessagingException {
+        if (msg.isMimeType("multipart/mixed")) {
+            Multipart mp = (Multipart)msg.getContent();
+            if (mp.getCount() > 1)
+                return true;
+        }
+        return false;
+    }
+
     List<String> fetchFolderMessageSubjects() throws Exception {
         def store = connectToStore()
         def inbox = openInbox(store)
@@ -89,6 +98,25 @@ class ReadMail {
         }
     }
 
+    boolean doMessagesWithSubjectAtInboxHaveAttachments(String subject) {
+        def store = connectToStore()
+        def inbox = openInbox(store)
+
+        inbox.open(Folder.READ_WRITE)
+
+        Message[] messages = inbox.getMessages()
+        if(!messages) {
+            return false
+        }
+        for(int i = 0; i < messages.size();i++) {
+            def message = messages[i]
+            if(!hasAttachments(message)) {
+                return false
+            }
+        }
+        true
+    }
+
     List<Map> messagesWithSubjectAtInbox(String subject) {
         def result = []
         def store = connectToStore()
@@ -104,7 +132,7 @@ class ReadMail {
                 result << [subject: message.subject, body: getMessageBodyAsAsAString(message)]
             }
         }
-        inbox.close true
+        inbox.close false
         store.close()
 
         result
