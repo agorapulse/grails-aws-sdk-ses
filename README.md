@@ -2,6 +2,7 @@ Grails AWS SDK SES Plugin
 =========================
 
 [![Build Status](https://travis-ci.org/agorapulse/grails-aws-sdk-ses.svg?branch=master)](https://travis-ci.org/agorapulse/grails-aws-sdk-ses)
+[![Download](https://api.bintray.com/packages/agorapulse/plugins/aws-sdk-ses/images/download.svg)](https://bintray.com/agorapulse/plugins/aws-sdk-ses/_latestVersion)
 
 The [AWS SDK Plugins for Grails3](https://medium.com/@benorama/aws-sdk-plugins-for-grails-3-cc7f910fdc0d#.5gdwdxei3) are a suite of plugins that adds support for the [Amazon Web Services](http://aws.amazon.com/) infrastructure services.
 
@@ -34,7 +35,7 @@ repositories {
 
 dependencies {
   ...
-  compile 'org.grails.plugins:aws-sdk-ses:2.0.0-beta3'
+  compile 'org.grails.plugins:aws-sdk-ses:2.0.0-beta4'
   ...
 }
 ```
