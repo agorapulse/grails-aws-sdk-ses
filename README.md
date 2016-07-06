@@ -35,7 +35,7 @@ repositories {
 
 dependencies {
   ...
-  compile 'org.grails.plugins:aws-sdk-ses:2.0.0-beta4'
+  compile 'org.grails.plugins:aws-sdk-ses:2.0.0-beta5'
   ...
 }
 ```
