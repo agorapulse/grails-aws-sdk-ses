@@ -4,7 +4,7 @@ import com.amazonaws.AmazonClientException
 import com.amazonaws.AmazonServiceException
 import com.amazonaws.ClientConfiguration
 import com.amazonaws.regions.Region
-import com.amazonaws.regions.ServiceAbbreviations
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient
 import com.amazonaws.services.simpleemail.model.*
 import grails.core.GrailsApplication
@@ -27,7 +27,7 @@ import static grails.plugin.awssdk.ses.AwsSdkSesEmailDeliveryStatus.*
 class AmazonSESService implements InitializingBean {
 
 
-    static SERVICE_NAME = ServiceAbbreviations.Email
+    static SERVICE_NAME = AmazonSimpleEmailService.ENDPOINT_PREFIX
 
     GrailsApplication grailsApplication
     AmazonSimpleEmailServiceClient client
