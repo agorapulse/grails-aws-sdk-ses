@@ -28,15 +28,9 @@ This plugin adds support for [Amazon Simple Email Service (Amazon SES)](https://
 Add plugin dependency to your `build.gradle`:
 
 ```groovy
-repositories {
-    ...
-    maven { url "http://dl.bintray.com/agorapulse/plugins" } // TEMP, to remove once the plugin is officially released
-    ...
-}
-
 dependencies {
   ...
-  compile 'org.grails.plugins:aws-sdk-ses:2.0.0-beta5'
+  compile 'org.grails.plugins:aws-sdk-ses:2.0.0'
   ...
 }
 ```
