@@ -10,6 +10,7 @@ import com.amazonaws.services.simpleemail.model.*
 import grails.core.GrailsApplication
 import grails.plugin.awssdk.AwsClientUtil
 import grails.util.Environment
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.InitializingBean
 
 import javax.activation.DataHandler
@@ -24,8 +25,8 @@ import java.nio.ByteBuffer
 
 import static grails.plugin.awssdk.ses.AwsSdkSesEmailDeliveryStatus.*
 
+@Slf4j
 class AmazonSESService implements InitializingBean {
-
 
     static SERVICE_NAME = AmazonSimpleEmailService.ENDPOINT_PREFIX
 
