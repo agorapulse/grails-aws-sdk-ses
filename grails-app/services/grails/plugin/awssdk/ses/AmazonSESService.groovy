@@ -98,12 +98,12 @@ class AmazonSESService implements InitializingBean {
                 log.debug "Address blacklisted destinationEmail=$destinationEmail"
                 statusId = STATUS_BLACKLISTED
             } else if (exception.message.find("Missing final")) {
-                log.warn "Invalid parameter value: destinationEmail=$destinationEmail, sourceEmail=$sourceEmail, replyToEmail=$replyToEmail, subject=$subject"
+                log.warn "An amazon service exception was catched while sending email: destinationEmail=$destinationEmail, sourceEmail=$sourceEmail, replyToEmail=$replyToEmail, subject=$subject"
             } else {
-                log.warn exception
+                log.warn 'An amazon service exception was catched while sending email', exception
             }
         } catch (AmazonClientException exception) {
-            log.warn exception
+            log.warn 'An amazon client exception was catched while sending email', exception
         }
         statusId
     }
@@ -194,10 +194,10 @@ class AmazonSESService implements InitializingBean {
             } else if (exception.message.find("Missing final")) {
                 log.warn "Invalid parameter value: destinationEmail=${transactionalEmail.recipients.toString()}, sourceEmail=${transactionalEmail.sourceEmail}, replyToEmail=${transactionalEmail.replyToEmail}, subject=${subject}"
             } else {
-                log.warn exception
+                log.warn 'An amazon service exception was catched while sending email with attachment', exception
             }
         } catch (AmazonClientException exception) {
-            log.warn exception
+            log.warn 'An amazon client exception was catched while sending email with attachment', exception
 
         }
         statusId
