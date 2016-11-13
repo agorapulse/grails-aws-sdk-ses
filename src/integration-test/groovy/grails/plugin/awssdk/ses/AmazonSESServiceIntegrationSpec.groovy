@@ -3,15 +3,22 @@ package grails.plugin.awssdk.ses
 import grails.test.mixin.integration.Integration
 import grails.util.Environment
 import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.IgnoreIf
 import spock.lang.Specification
-import static grails.plugin.awssdk.ses.TestInboxConfig.*
 
 @Integration
-class AmazonSESServiceIntegrationSpec extends Specification implements ReadMailIntegrationTest {
+class AmazonSESServiceIntegrationSpec extends Specification {
+
+    String email = System.getenv('TEST_INBOX_EMAIL')
+    ReadMail readEmail = ReadMail.withEnvironmentVariables()
 
     @Autowired
     AmazonSESService amazonSESService
 
+    @IgnoreIf({ !System.getenv('TEST_INBOX_EMAIL') ||
+                !System.getenv('TEST_INBOX_HOST') ||
+                !System.getenv('TEST_INBOX_FOLDER') ||
+                !System.getenv('TEST_INBOX_PROVIDER') })
     void "test AmazonSESService.mail method actually delivers an email"() {
         when:
         def subjectStr = 'GRAILS AWS SDK SES Subject'
@@ -40,6 +47,10 @@ class AmazonSESServiceIntegrationSpec extends Specification implements ReadMailI
         !emailFound
     }
 
+    @IgnoreIf({  !System.getenv('TEST_INBOX_EMAIL') ||
+                !System.getenv('TEST_INBOX_HOST') ||
+                !System.getenv('TEST_INBOX_FOLDER') ||
+                !System.getenv('TEST_INBOX_PROVIDER') })
     void "test send attachment"() {
         when:
         def f = new File('src/integration-test/groovy/grails/plugin/awssdk/ses/groovylogo.png')
@@ -88,7 +99,10 @@ class AmazonSESServiceIntegrationSpec extends Specification implements ReadMailI
         !emailFound
     }
 
-
+    @IgnoreIf({  !System.getenv('TEST_INBOX_EMAIL') ||
+                !System.getenv('TEST_INBOX_HOST') ||
+                !System.getenv('TEST_INBOX_FOLDER') ||
+                !System.getenv('TEST_INBOX_PROVIDER') })
     void "test that if you try to send an unsupported attachment an exception is thrown "() {
         when:
         def subjectStr = 'GRAILS AWS SDK SES with Attachment'

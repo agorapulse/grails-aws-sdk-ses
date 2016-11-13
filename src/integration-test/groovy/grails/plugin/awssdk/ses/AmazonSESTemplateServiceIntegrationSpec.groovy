@@ -3,15 +3,22 @@ package grails.plugin.awssdk.ses
 import grails.test.mixin.integration.Integration
 import grails.util.Environment
 import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.IgnoreIf
 import spock.lang.Specification
 import static grails.plugin.awssdk.ses.AwsSdkSesEmailDeliveryStatus.*
 
 @Integration
-class AmazonSESTemplateServiceIntegrationSpec extends Specification implements ReadMailIntegrationTest {
+class AmazonSESTemplateServiceIntegrationSpec extends Specification {
+    String email = System.getenv('TEST_INBOX_EMAIL')
+    ReadMail readEmail = ReadMail.withEnvironmentVariables()
 
     @Autowired
     AmazonSESTemplateService amazonSESTemplateService
 
+    @IgnoreIf({ !System.getenv('TEST_INBOX_EMAIL') ||
+            !System.getenv('TEST_INBOX_HOST') ||
+            !System.getenv('TEST_INBOX_FOLDER') ||
+            !System.getenv('TEST_INBOX_PROVIDER') })
     void "test AmazonSESTemplateService.sendTemplate method actually delivers an email with a template rendered"() {
         when:
         def statusId = amazonSESTemplateService.sendTemplate(
@@ -41,6 +48,10 @@ class AmazonSESTemplateServiceIntegrationSpec extends Specification implements R
         !emailFound
     }
 
+    @IgnoreIf({  !System.getenv('TEST_INBOX_EMAIL') ||
+                !System.getenv('TEST_INBOX_HOST') ||
+                !System.getenv('TEST_INBOX_FOLDER') ||
+                !System.getenv('TEST_INBOX_PROVIDER') })
     void "test AmazonSESTemplateService.mailTemplate method actually delivers an email with a template rendered"() {
         when:
         def m = [foo: 'bar']

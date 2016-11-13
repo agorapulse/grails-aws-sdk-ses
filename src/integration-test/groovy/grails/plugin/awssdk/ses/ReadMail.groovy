@@ -6,6 +6,16 @@ class ReadMail {
 
     TestInboxConfig testInboxConfig
 
+    static ReadMail withEnvironmentVariables() {
+        String email = System.getenv('TEST_INBOX_EMAIL')
+        String host = System.getenv('TEST_INBOX_HOST')
+        String password = System.getenv('TEST_INBOX_PASSWORD')
+        String folder = System.getenv('TEST_INBOX_FOLDER')
+        String provider = System.getenv('TEST_INBOX_PROVIDER')
+        def testInboxConfig = new TestInboxConfig(email: email, host: host, password: password, folder: folder, provider: provider)
+        new ReadMail(testInboxConfig: testInboxConfig)
+    }
+
     Properties instantiatProperties() {
         Properties props = new Properties()
         props.setProperty("mail.imap.ssl.enable", "javax.net.ssl.SSLSocketFactory")

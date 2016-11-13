@@ -292,6 +292,8 @@ TEST_INBOX_FOLDER=INBOX
 TEST_INBOX_PROVIDER=pop3
 ```
 
+If you don't setup the previous environment variables, the integration tests will be ignored. 
+
 Note: **If you SES account is still sandboxed. You can only send emails to verified email accounts.**
 
 
