@@ -22,7 +22,7 @@ class AwsClientUtil {
     public static final String PROXY_USERNAME = 'proxyUsername'
     public static final String PROXY_WORKSTATION = 'proxyWorkstation'
 
-    static intValueForConfigName(Config co, String configName, final String serviceConfig,  final String defaultConfig, int defaultValue = 0) {
+    static int intValueForConfigName(Config co, String configName, final String serviceConfig,  final String defaultConfig, int defaultValue = 0) {
         def propertykey = "${serviceConfig}.${configName}" as String
         if ( co.getProperty(propertykey, Integer, null) ) {
             return co.getProperty(propertykey, Integer, null).intValue()
@@ -34,7 +34,7 @@ class AwsClientUtil {
         defaultValue
     }
 
-    static stringValueForConfig(Config co,  String configName,  final String serviceConfig, final String defaultConfig, String defaultValue = '') {
+    static String stringValueForConfig(Config co,  String configName,  final String serviceConfig, final String defaultConfig, String defaultValue = '') {
         def propertyKey = "${serviceConfig}.${configName}" as String
         if ( co.getProperty(propertyKey, String, null) ) {
             return co.getProperty(propertyKey, String, null)
