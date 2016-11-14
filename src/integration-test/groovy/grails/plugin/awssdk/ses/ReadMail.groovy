@@ -118,6 +118,10 @@ class ReadMail {
         if(!messages) {
             return false
         }
+        messages = messages.findAll { it.subject == subject }
+        if(!messages) {
+            return false
+        }
         for(int i = 0; i < messages.size();i++) {
             def message = messages[i]
             if(!hasAttachments(message)) {
