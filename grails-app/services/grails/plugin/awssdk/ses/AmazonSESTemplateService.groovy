@@ -1,21 +1,24 @@
 package grails.plugin.awssdk.ses
 
 import grails.gsp.PageRenderer
+import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode
 import org.joda.time.LocalDateTime
 import org.springframework.context.MessageSource
 
+@CompileStatic
 class AmazonSESTemplateService extends AmazonSESService {
 
     MessageSource messageSource
-    PageRenderer groovyPageRenderer
 
+    PageRenderer groovyPageRenderer
 
     /**
      * @return 1 if successful, 0 if not sent, -1 if blacklisted
      */
     int mailTemplate(@DelegatesTo(TransactionalEmailTemplate) Closure composer) throws Exception {
 
-        Closure cl = composer.clone()
+        Closure cl = composer.clone() as Closure
         TransactionalEmailTemplate transactionalEmailTemplate = new TransactionalEmailTemplate()
         cl.delegate = transactionalEmailTemplate
         cl.resolveStrategy = Closure.DELEGATE_FIRST
@@ -88,6 +91,7 @@ class AmazonSESTemplateService extends AmazonSESService {
      * @param replyToEmail
      * @return 1 if successful, 0 if not sent, -1 if blacklisted
      */
+    @CompileStatic(TypeCheckingMode.SKIP) // Skip static compiliation since emailValidated Getter and save are no in the interface
     int sendTemplateToRecipient(MailRecipient recipient,
                                 String subjectKey,
                                 List subjectVariables,

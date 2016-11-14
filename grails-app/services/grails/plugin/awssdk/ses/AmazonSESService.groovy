@@ -2,16 +2,19 @@ package grails.plugin.awssdk.ses
 
 import com.amazonaws.AmazonClientException
 import com.amazonaws.AmazonServiceException
-import com.amazonaws.ClientConfiguration
+import com.amazonaws.AmazonWebServiceClient
+import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.regions.Region
+import com.amazonaws.regions.RegionUtils
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient
 import com.amazonaws.services.simpleemail.model.*
-import grails.core.GrailsApplication
+import grails.config.Config
+import grails.core.support.GrailsConfigurationAware
 import grails.plugin.awssdk.AwsClientUtil
 import grails.util.Environment
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import org.springframework.beans.factory.InitializingBean
 
 import javax.activation.DataHandler
 import javax.activation.DataSource
@@ -25,32 +28,50 @@ import java.nio.ByteBuffer
 
 import static grails.plugin.awssdk.ses.AwsSdkSesEmailDeliveryStatus.*
 
+@CompileStatic
 @Slf4j
-class AmazonSESService implements InitializingBean {
+class AmazonSESService implements GrailsConfigurationAware {
 
-    static SERVICE_NAME = AmazonSimpleEmailService.ENDPOINT_PREFIX
+    static String SERVICE_NAME = AmazonSimpleEmailService.ENDPOINT_PREFIX
+    String sourceEmail
+    String subjectPrefix
+    String templatePath
+    AmazonWebServiceClient client
 
-    GrailsApplication grailsApplication
-    AmazonSimpleEmailServiceClient client
+    @Override
+    void setConfiguration(Config co) {
+        final String defaultConfig = 'grails.plugin.awssdk'
+        final String serviceConfig = "${defaultConfig}.ses"
 
-    void afterPropertiesSet() throws Exception {
-        // Set region
-        Region region = AwsClientUtil.buildRegion(config, serviceConfig)
-        assert region?.isServiceSupported(SERVICE_NAME)
+        sourceEmail = co.getProperty('grails.plugin.awssdk.ses.sourceEmail', String)
+        subjectPrefix = co.getProperty('grails.plugin.awssdk.ses.subjectPrefix', String)
+        templatePath = co.getProperty('grails.plugin.awssdk.ses.templatePath', String, '/templates/email')
 
-        // Create client
-        def credentials = AwsClientUtil.buildCredentials(config, serviceConfig)
-        ClientConfiguration configuration = AwsClientUtil.buildClientConfiguration(config, serviceConfig)
-        client = new AmazonSimpleEmailServiceClient(credentials, configuration)
+        String accessKey = AwsClientUtil.stringValueForConfig(co, 'accessKey', serviceConfig, defaultConfig, null)
+        String secretKey = AwsClientUtil.stringValueForConfig(co, 'secretKey', serviceConfig, defaultConfig, null)
+        String regionName = AwsClientUtil.stringValueForConfig(co, 'region', serviceConfig, defaultConfig, AwsClientUtil.DEFAULT_REGION)
+
+        if ( !accessKey || !secretKey || !regionName ) {
+            throw new IllegalStateException('you must define at least AWS accessKey, secretKey and region to use this plugin')
+        }
+
+        Region region = RegionUtils.getRegion(regionName)
+        if ( !region?.isServiceSupported(SERVICE_NAME) ) {
+            throw  new IllegalStateException("${SERVICE_NAME} is not supported in region $regionName")
+        }
+
+        def credentials = new BasicAWSCredentials(accessKey, secretKey)
+        def clientConfiguration = AwsClientUtil.clientConfigurationWithConfig(co, defaultConfig, serviceConfig)
+        client = new AmazonSimpleEmailServiceClient(credentials, clientConfiguration)
                 .withRegion(region)
     }
+
     /**
      * @return 1 if successful, 0 if not sent, -1 if blacklisted
      */
     int mail(@DelegatesTo(TransactionalEmail) Closure composer) throws Exception {
 
         def transactionalEmail = transactionalEmailWithClosure(composer)
-
         send(transactionalEmail.destinationEmail,
                 transactionalEmail.subject,
                 transactionalEmail.htmlBody,
@@ -77,8 +98,8 @@ class AmazonSESService implements InitializingBean {
             return statusId
         }
         if (!sourceEmail) {
-            assert serviceConfig.sourceEmail, "Default sourceEmail must be set in config"
-            sourceEmail = serviceConfig.sourceEmail
+            assert this.sourceEmail, "Default sourceEmail must be set in config"
+            sourceEmail = this.sourceEmail
         }
 
         subject = preffixSubject(subject)
@@ -91,7 +112,7 @@ class AmazonSESService implements InitializingBean {
             if (replyToEmail) {
                 sendEmailRequest.replyToAddresses = [replyToEmail]
             }
-            client.sendEmail(sendEmailRequest)
+            (client as AmazonSimpleEmailServiceClient).sendEmail(sendEmailRequest)
             statusId = STATUS_DELIVERED
         } catch (AmazonServiceException exception) {
             if (exception.message.find("Address blacklisted")) {
@@ -100,10 +121,10 @@ class AmazonSESService implements InitializingBean {
             } else if (exception.message.find("Missing final")) {
                 log.warn "An amazon service exception was catched while sending email: destinationEmail=$destinationEmail, sourceEmail=$sourceEmail, replyToEmail=$replyToEmail, subject=$subject"
             } else {
-                log.warn 'An amazon service exception was catched while sending email', exception
+                log.warn 'An amazon service exception was catched while send +ng email' + exception.message
             }
         } catch (AmazonClientException exception) {
-            log.warn 'An amazon client exception was catched while sending email', exception
+            log.warn 'An amazon client exception was catched while sending email' + exception.message
         }
         statusId
     }
@@ -112,22 +133,12 @@ class AmazonSESService implements InitializingBean {
         // Prefix email subject for DEV and BETA environment
         if (Environment.current != Environment.PRODUCTION) {
             subject = "[${Environment.current}] $subject"
-        } else if (serviceConfig?.subjectPrefix) {
-            subject = "${serviceConfig.subjectPrefix} $subject"
+
+        } else if ( subjectPrefix ) {
+            subject = "${subjectPrefix} $subject"
         }
         subject
     }
-
-    // PRIVATE
-
-    def getConfig() {
-        grailsApplication.config.grails?.plugin?.awssdk ?: grailsApplication.config.grails?.plugins?.awssdk
-    }
-
-    def getServiceConfig() {
-        config['ses']
-    }
-
 
     int mailWithAttachment(@DelegatesTo(TransactionalEmail) Closure composer) throws UnsupportedAttachmentTypeException {
         def transactionalEmail = transactionalEmailWithClosure(composer)
@@ -135,13 +146,11 @@ class AmazonSESService implements InitializingBean {
     }
 
     TransactionalEmail transactionalEmailWithClosure(@DelegatesTo(TransactionalEmail) Closure composer) {
-
-        Closure cl = composer.clone()
+        Closure cl = composer.clone() as Closure
         TransactionalEmail transactionalEmail = new TransactionalEmail()
         cl.delegate = transactionalEmail
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
-
         transactionalEmail
     }
 
@@ -183,7 +192,7 @@ class AmazonSESService implements InitializingBean {
         rawEmailRequest.setSource(transactionalEmail.sourceEmail)
 
         try {
-            client.sendRawEmail(rawEmailRequest);
+            (client as AmazonSimpleEmailServiceClient).sendRawEmail(rawEmailRequest);
             statusId = STATUS_DELIVERED
 
         } catch (AmazonServiceException exception) {
@@ -194,10 +203,10 @@ class AmazonSESService implements InitializingBean {
             } else if (exception.message.find("Missing final")) {
                 log.warn "Invalid parameter value: destinationEmail=${transactionalEmail.recipients.toString()}, sourceEmail=${transactionalEmail.sourceEmail}, replyToEmail=${transactionalEmail.replyToEmail}, subject=${subject}"
             } else {
-                log.warn 'An amazon service exception was catched while sending email with attachment', exception
+                log.warn 'An amazon service exception was catched while sending email with attachment' + exception.message
             }
         } catch (AmazonClientException exception) {
-            log.warn 'An amazon client exception was catched while sending email with attachment', exception
+            log.warn 'An amazon client exception was catched while sending email with attachment' + exception.message
 
         }
         statusId
