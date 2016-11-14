@@ -1,0 +1,77 @@
+buildscript {
+    ext {
+        grailsVersion = project.grailsVersion
+    }
+    repositories {
+        mavenLocal()
+        maven { url "https://repo.grails.org/grails/core" }
+    }
+    dependencies {
+        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+    }
+}
+
+version "2.0.4"
+group "org.grails.plugins"
+
+apply plugin:"eclipse"
+apply plugin:"idea"
+apply plugin:"org.grails.grails-plugin"
+apply plugin:"org.grails.grails-plugin-publish"
+apply plugin:"org.grails.grails-gsp"
+
+ext {
+    grailsVersion = project.grailsVersion
+    gradleWrapperVersion = project.gradleWrapperVersion
+}
+
+repositories {
+    mavenLocal()
+    maven { url "https://repo.grails.org/grails/core" }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.grails:grails-bom:$grailsVersion"
+    }
+    applyMavenExclusions false
+}
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-logging"
+    compile "org.springframework.boot:spring-boot-autoconfigure"
+    compile "org.grails:grails-core"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    provided "org.springframework.boot:spring-boot-starter-tomcat"
+    compile "org.grails:grails-dependencies"
+    compile "org.grails:grails-web-boot"
+    console "org.grails:grails-console"
+    profile "org.grails.profiles:web-plugin"
+    provided "org.grails:grails-plugin-services"
+    testCompile "org.grails:grails-plugin-testing"
+
+    // Latest AWS SDK for SES
+    compile "com.amazonaws:aws-java-sdk-ses:$awsJavaSdkVersion"
+
+
+    compile project(":groovy-module")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = gradleWrapperVersion
+}
+
+grailsPublish {
+    user = System.getenv("BINTRAY_USER") ?: ''
+    key = System.getenv("BINTRAY_KEY") ?: ''
+    userOrg = 'agorapulse'
+    githubSlug = "agorapulse/grails-$project.name"
+    license {
+        name = 'Apache-2.0'
+    }
+    title = "AWS SDK SES"
+    desc = "Grails AWS SDK SES plugin"
+    developers = [benorama:"Benoit Hediard"]
+    portalUser = System.getenv("GRAILS_PORTAL_USER") ?: ''
+    portalPassword = System.getenv("GRAILS_PORTAL_PASSWORD") ?: ''
+}
