@@ -16,7 +16,7 @@ class ReadMail {
         new ReadMail(testInboxConfig: testInboxConfig)
     }
 
-    Properties instantiatProperties() {
+    static Properties instantiatProperties() {
         Properties props = new Properties()
         props.setProperty("mail.imap.ssl.enable", "javax.net.ssl.SSLSocketFactory")
         props.setProperty("mail.imap.socketFactory.fallback", "false")
@@ -42,7 +42,7 @@ class ReadMail {
         inbox
     }
 
-    boolean hasAttachments(Message msg) throws MessagingException {
+    static boolean hasAttachments(Message msg) throws MessagingException {
         if (msg.isMimeType("multipart/mixed")) {
             Multipart mp = (Multipart)msg.getContent();
             if (mp.getCount() > 1)
@@ -148,7 +148,7 @@ class ReadMail {
         result
     }
 
-    String parseMultipart( Multipart mPart ) {
+    static String parseMultipart(Multipart mPart ) {
         for ( int i = 0; i < mPart.getCount(); i++ ) {
             BodyPart bp = mPart.getBodyPart( i );
             String disposition = bp.getDisposition()
