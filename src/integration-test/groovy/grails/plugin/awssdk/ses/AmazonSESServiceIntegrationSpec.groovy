@@ -33,7 +33,7 @@ class AmazonSESServiceIntegrationSpec extends Specification {
         when: " Fetch emails from the server to test the email have been delivered "
         sleep(10_000) // sleep for ten senconds to ensure the email has reached the server
         def currentEnv = Environment.current
-        def emailSubject = "[${currentEnv}] ${subjectStr}"
+        def emailSubject = "[${currentEnv}] ${subjectStr}" as String
         boolean emailFound = readEmail.fetchFolderMessageSubjects().any { it == emailSubject}
 
         then:
@@ -76,7 +76,7 @@ class AmazonSESServiceIntegrationSpec extends Specification {
         when: " Fetch emails from the server to test the email have been delivered "
         sleep(10_000) // sleep for ten senconds to ensure the email has reached the server
         def currentEnv = Environment.current
-        def emailSubject = "[${currentEnv}] ${subjectStr}"
+        def emailSubject = "[${currentEnv}] ${subjectStr}" as String
         boolean emailFound = readEmail.fetchFolderMessageSubjects().any { it == emailSubject}
         List<Map> messages = readEmail.messagesWithSubjectAtInbox(emailSubject)
 
