@@ -34,7 +34,7 @@ class AwsSesMailerSpec extends Specification {
 
 
         when:
-        def f = new File('src/integration-test/groovy/grails/plugin/awssdk/ses/groovylogo.png')
+        def f = new File('src/test/groovy/grails/plugin/awssdk/ses/groovylogo.png')
 
         then:
         f.exists()

@@ -22,3 +22,4 @@ build/
 .idea/
 /.DS_Store
 /classes
+/grails-plugin/.DS_Store

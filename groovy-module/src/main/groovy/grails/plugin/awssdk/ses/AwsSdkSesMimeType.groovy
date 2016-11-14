@@ -1,139 +1,12 @@
 package grails.plugin.awssdk.ses
 
+import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode
+
+@CompileStatic
 class AwsSdkSesMimeType {
 
-    String suffixApplicable
-    String mediaTypeSubtype
-
-
-    static boolean isMimeTypeSupported(String mimeType) {
-        ! awsSESUnsupportedMimeTypes().any { it == mimeType}
-    }
-
-    static boolean isFileExtensionSupported(String filename) {
-        def ext = fileExtension(filename)
-        ! awsSESUnsupportedAttachmentTypes().any { it == ext}
-    }
-
-    static String filenameWithoutExtension(final String filename){
-        filename.lastIndexOf('.').with {it != -1 ? filename[0..<it] : filename}
-    }
-
-    static String fileExtension(final String filename) {
-        String filenameWithoutExtension = filenameWithoutExtension(filename)
-        filename.replaceAll(filenameWithoutExtension, '')
-    }
-
-    static String mimeTypeFromFilename(String filename) {
-        String extension = fileExtension(filename)
-        allMimeTypes().find { it.suffixApplicable == extension}?.mediaTypeSubtype
-    }
-
-    static List<String> awsSESUnsupportedMimeTypes() {
-        allMimeTypes().findAll { m -> awsSESUnsupportedAttachmentTypes().any { it == m.suffixApplicable } }.collect { it.mediaTypeSubtype }
-    }
-
-
-    /**
-     * @see <a href="http://docs.aws.amazon.com/ses/latest/DeveloperGuide/mime-types.html">AWS SES Unsupported Attachment Types</a>
-     */
-    static List<String> awsSESUnsupportedAttachmentTypes() {
-        ['.ade',
-         '.adp',
-         '.app',
-         '.asp',
-         '.bas',
-         '.bat',
-         '.cer',
-         '.chm',
-         '.cmd',
-         '.com',
-         '.cpl',
-         '.crt',
-         '.csh',
-         '.der',
-         '.exe',
-         '.fxp',
-         '.gadget',
-         '.hlp',
-         '.hta',
-         '.inf',
-         '.ins',
-         '.isp',
-         '.its',
-         '.js',
-         '.jse',
-         '.ksh',
-         '.lib',
-         '.lnk',
-         '.mad',
-         '.maf',
-         '.mag',
-         '.mam',
-         '.maq',
-         '.mar',
-         '.mas',
-         '.mat',
-         '.mau',
-         '.mav',
-         '.maw',
-         '.mda',
-         '.mdb',
-         '.mde',
-         '.mdt',
-         '.mdw',
-         '.mdz',
-         '.msc',
-         '.msh',
-         '.msh1',
-         '.msh2',
-         '.mshxml',
-         '.msh1xml',
-         '.msh2xml',
-         '.msi',
-         '.msp',
-         '.mst',
-         '.ops',
-         '.pcd',
-         '.pif',
-         '.plg',
-         '.prf',
-         '.prg',
-         '.reg',
-         '.scf',
-         '.scr',
-         '.sct',
-         '.shb',
-         '.shs',
-         '.sys',
-         '.ps1',
-         '.ps1xml',
-         '.ps2',
-         '.ps2xml',
-         '.psc1',
-         '.psc2',
-         '.tmp',
-         '.url',
-         '.vb',
-         '.vbe',
-         '.vbs',
-         '.vps',
-         '.vsmacros',
-         '.vss',
-         '.vst',
-         '.vsw',
-         '.vxd',
-         '.ws',
-         '.wsc',
-         '.wsf',
-         '.wsh',
-         '.xnk']
-    }
-
-
-    static List<AwsSdkSesMimeType> allMimeTypes() {
-
-        List<List<String>> all = [
+    private static final List<List<String>> ALL = [
                 ['.3dm', 'x-world/x-3dmf'],
                 ['.3dmf', 'x-world/x-3dmf'],
                 ['.a', 'application/octet-stream'],
@@ -781,6 +654,137 @@ class AwsSdkSesMimeType {
                 ['.zoo', 'application/octet-stream'],
                 ['.zsh', 'text/x-script.zsh']]
 
-        all.collect { new  AwsSdkSesMimeType(suffixApplicable: it[0], mediaTypeSubtype:it[1]) }
+    String suffixApplicable
+    String mediaTypeSubtype
+
+    static boolean isMimeTypeSupported(String mimeType) {
+        !awsSESUnsupportedMimeTypes().any { it == mimeType}
+    }
+
+    static boolean isFileExtensionSupported(String filename) {
+        def ext = fileExtension(filename)
+        !awsSESUnsupportedAttachmentTypes().any { it == ext}
+    }
+
+    @CompileStatic(TypeCheckingMode.SKIP)
+    static String filenameWithoutExtension(final String filename){
+        filename.lastIndexOf('.').with {it != -1 ? filename[0..<it] : filename}
+    }
+
+    static String fileExtension(final String filename) {
+        String filenameWithoutExtension = filenameWithoutExtension(filename)
+        filename.replaceAll(filenameWithoutExtension, '')
+    }
+
+    static String mimeTypeFromFilename(String filename) {
+        String extension = fileExtension(filename)
+        allMimeTypes().find { it.suffixApplicable == extension}?.mediaTypeSubtype
+    }
+
+    static List<String> awsSESUnsupportedMimeTypes() {
+        allMimeTypes().findAll { m -> awsSESUnsupportedAttachmentTypes().any { it == m.suffixApplicable } }.collect { it.mediaTypeSubtype }
+    }
+
+
+    /**
+     * @see <a href="http://docs.aws.amazon.com/ses/latest/DeveloperGuide/mime-types.html">AWS SES Unsupported Attachment Types</a>
+     */
+    static List<String> awsSESUnsupportedAttachmentTypes() {
+        ['.ade',
+         '.adp',
+         '.app',
+         '.asp',
+         '.bas',
+         '.bat',
+         '.cer',
+         '.chm',
+         '.cmd',
+         '.com',
+         '.cpl',
+         '.crt',
+         '.csh',
+         '.der',
+         '.exe',
+         '.fxp',
+         '.gadget',
+         '.hlp',
+         '.hta',
+         '.inf',
+         '.ins',
+         '.isp',
+         '.its',
+         '.js',
+         '.jse',
+         '.ksh',
+         '.lib',
+         '.lnk',
+         '.mad',
+         '.maf',
+         '.mag',
+         '.mam',
+         '.maq',
+         '.mar',
+         '.mas',
+         '.mat',
+         '.mau',
+         '.mav',
+         '.maw',
+         '.mda',
+         '.mdb',
+         '.mde',
+         '.mdt',
+         '.mdw',
+         '.mdz',
+         '.msc',
+         '.msh',
+         '.msh1',
+         '.msh2',
+         '.mshxml',
+         '.msh1xml',
+         '.msh2xml',
+         '.msi',
+         '.msp',
+         '.mst',
+         '.ops',
+         '.pcd',
+         '.pif',
+         '.plg',
+         '.prf',
+         '.prg',
+         '.reg',
+         '.scf',
+         '.scr',
+         '.sct',
+         '.shb',
+         '.shs',
+         '.sys',
+         '.ps1',
+         '.ps1xml',
+         '.ps2',
+         '.ps2xml',
+         '.psc1',
+         '.psc2',
+         '.tmp',
+         '.url',
+         '.vb',
+         '.vbe',
+         '.vbs',
+         '.vps',
+         '.vsmacros',
+         '.vss',
+         '.vst',
+         '.vsw',
+         '.vxd',
+         '.ws',
+         '.wsc',
+         '.wsf',
+         '.wsh',
+         '.xnk']
+    }
+
+
+    @CompileStatic(TypeCheckingMode.SKIP)
+    static List<AwsSdkSesMimeType> allMimeTypes() {
+        ALL.collect { new  AwsSdkSesMimeType(suffixApplicable: it[0], mediaTypeSubtype:it[1]) }
     }
 }
