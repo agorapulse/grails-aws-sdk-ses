@@ -31,6 +31,7 @@ class AmazonSESTemplateServiceIntegrationSpec extends Specification {
     }
 
     @IgnoreIf({ !System.getenv('TEST_INBOX_EMAIL') ||
+            !System.getenv('TEST_INBOX_PASSWORD') ||
             !System.getenv('TEST_INBOX_HOST') ||
             !System.getenv('TEST_INBOX_FOLDER') ||
             !System.getenv('TEST_INBOX_PROVIDER') })
@@ -63,7 +64,8 @@ class AmazonSESTemplateServiceIntegrationSpec extends Specification {
         !emailFound
     }
 
-    @IgnoreIf({  !System.getenv('TEST_INBOX_EMAIL') ||
+    @IgnoreIf({ !System.getenv('TEST_INBOX_EMAIL') ||
+                !System.getenv('TEST_INBOX_PASSWORD') ||
                 !System.getenv('TEST_INBOX_HOST') ||
                 !System.getenv('TEST_INBOX_FOLDER') ||
                 !System.getenv('TEST_INBOX_PROVIDER') })
