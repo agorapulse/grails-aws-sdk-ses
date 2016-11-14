@@ -15,6 +15,21 @@ class AmazonSESTemplateServiceIntegrationSpec extends Specification {
     @Autowired
     AmazonSESTemplateService amazonSESTemplateService
 
+
+    def "test renderHtmlForTemplate"() {
+        when:
+        String destinationEmail = 'me@email.com'
+        String templateName = 'test'
+        String htmlBody = amazonSESTemplateService.renderHtmlForTemplate(Locale.ENGLISH, [foo: 'bar'], destinationEmail, templateName)
+
+        then:
+        htmlBody
+        htmlBody.contains('The template content with some foo=bar')
+        htmlBody.contains('<html>')
+        htmlBody.contains('</html>')
+
+    }
+
     @IgnoreIf({ !System.getenv('TEST_INBOX_EMAIL') ||
             !System.getenv('TEST_INBOX_HOST') ||
             !System.getenv('TEST_INBOX_FOLDER') ||

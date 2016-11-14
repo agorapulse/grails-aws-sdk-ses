@@ -56,19 +56,23 @@ class AmazonSESTemplateService extends AmazonSESService {
         int statusId = 0
         if (destinationEmail != '') {
             String subject = messageSource.getMessage(subjectKey, subjectVariables as Object[], locale)
-            // Render body
-            String htmlBody = groovyPageRenderer.render(
-                    model: model + [
-                            locale  : locale,
-                            notificationEmail: destinationEmail,
-                            sentDate: new LocalDateTime().plusMinutes((timeZoneGmt * 60).toInteger()).toDate()
-                    ],
-                    template: "${serviceConfig['templatePath'] ?: '/templates/email'}/${templateName}"
-            )
-            // Send email
+            String htmlBody = renderHtmlForTemplate(locale, model, destinationEmail, templateName, timeZoneGmt)
+
             statusId = send(destinationEmail, subject, htmlBody, '', replyToEmail)
         }
         statusId
+    }
+
+    String renderHtmlForTemplate(Locale locale, Map model, String destinationEmail, String templateName, int timeZoneGmt = 0) {
+        def t = "${templatePath}/${templateName}" as String
+        groovyPageRenderer.render(
+                model: model + [
+                        locale  : locale,
+                        notificationEmail: destinationEmail,
+                        sentDate: new LocalDateTime().plusMinutes((timeZoneGmt * 60).toInteger()).toDate()
+                ],
+                template: t
+        )
     }
 
     /**
