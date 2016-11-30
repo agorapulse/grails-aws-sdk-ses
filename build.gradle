@@ -78,3 +78,7 @@ grailsPublish {
     portalUser = System.getenv("GRAILS_PORTAL_USER") ?: ''
     portalPassword = System.getenv("GRAILS_PORTAL_PASSWORD") ?: ''
 }
+
+test {
+    systemProperties System.properties
+}

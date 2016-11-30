@@ -16,10 +16,11 @@ class AmazonSESServiceIntegrationSpec extends Specification {
     @Autowired
     AmazonSESService amazonSESService
 
-    @IgnoreIf({ !System.getenv('TEST_INBOX_EMAIL') ||
-                !System.getenv('TEST_INBOX_HOST') ||
-                !System.getenv('TEST_INBOX_FOLDER') ||
-                !System.getenv('TEST_INBOX_PROVIDER') })
+    @IgnoreIf({ !System.getProperty('TEST_INBOX_EMAIL') ||
+                !System.getProperty('TEST_INBOX_PASSWORD') ||
+                !System.getProperty('TEST_INBOX_HOST') ||
+                !System.getProperty('TEST_INBOX_FOLDER') ||
+                !System.getProperty('TEST_INBOX_PROVIDER') })
     void "test AmazonSESService.mail method actually delivers an email"() {
         when:
         def subjectStr = 'GRAILS AWS SDK SES Subject'
@@ -48,10 +49,11 @@ class AmazonSESServiceIntegrationSpec extends Specification {
         !emailFound
     }
 
-    @IgnoreIf({  !System.getenv('TEST_INBOX_EMAIL') ||
-                !System.getenv('TEST_INBOX_HOST') ||
-                !System.getenv('TEST_INBOX_FOLDER') ||
-                !System.getenv('TEST_INBOX_PROVIDER') })
+    @IgnoreIf({ !System.getProperty('TEST_INBOX_EMAIL') ||
+            !System.getProperty('TEST_INBOX_PASSWORD') ||
+            !System.getProperty('TEST_INBOX_HOST') ||
+            !System.getProperty('TEST_INBOX_FOLDER') ||
+            !System.getProperty('TEST_INBOX_PROVIDER') })
     void "test send attachment"() {
         when:
         def f = new File('src/integration-test/groovy/grails/plugin/awssdk/ses/groovylogo.png')
@@ -100,10 +102,6 @@ class AmazonSESServiceIntegrationSpec extends Specification {
         !emailFound
     }
 
-    @IgnoreIf({  !System.getenv('TEST_INBOX_EMAIL') ||
-                !System.getenv('TEST_INBOX_HOST') ||
-                !System.getenv('TEST_INBOX_FOLDER') ||
-                !System.getenv('TEST_INBOX_PROVIDER') })
     void "test that if you try to send an unsupported attachment an exception is thrown "() {
         when:
         def subjectStr = 'GRAILS AWS SDK SES with Attachment'
