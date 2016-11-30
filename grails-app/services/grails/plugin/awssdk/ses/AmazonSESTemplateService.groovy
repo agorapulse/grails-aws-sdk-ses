@@ -14,6 +14,12 @@ class AmazonSESTemplateService extends AmazonSESService {
 
     MessageSource messageSource
 
+    /**
+     * Use the variable name groovyPageRenderer to enable
+     * automatic Spring bean binding. Notice the variable
+     * starts with groovy..., could be cause of confusing because
+     * the type is PageRenderer without prefix Groovy....
+     */
     PageRenderer groovyPageRenderer
 
     /**
