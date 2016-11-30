@@ -1,3 +1,1 @@
-include ':grails-plugin'
-include ':groovy-module'
 rootProject.name = 'aws-sdk-ses'
