@@ -46,7 +46,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.grails:grails-core"
-    compile 'agorapulse.libs:groovy-aws-sdk-ses:1.0'
     compile "org.springframework.boot:spring-boot-starter-actuator"
     provided "org.springframework.boot:spring-boot-starter-tomcat"
     compile "org.grails:grails-dependencies"
@@ -55,6 +54,9 @@ dependencies {
     profile "org.grails.profiles:web-plugin"
     provided "org.grails:grails-plugin-services"
     testCompile "org.grails:grails-plugin-testing"
+
+    // Latest Groovy AWS SDK SES lib
+    compile 'agorapulse.libs:groovy-aws-sdk-ses:1.0'
 
     // Latest AWS SDK for SES
     compile "com.amazonaws:aws-java-sdk-ses:$awsJavaSdkVersion"
